@@ -1,0 +1,8 @@
+# Conveyor
+S  A 7
+S B     3
+B A 2
+# Departures
+UA11 A LAX 09:30
+# Bags
+B1 S UA11

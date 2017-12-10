@@ -1,4 +1,4 @@
-package io.github.rajasharan;
+package io.github.rajasharan.model;
 
 /**
  * Created by raja on 12/10/17.

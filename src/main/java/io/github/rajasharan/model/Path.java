@@ -1,4 +1,4 @@
-package io.github.rajasharan;
+package io.github.rajasharan.model;
 
 import java.util.Comparator;
 

@@ -1,4 +1,7 @@
-package io.github.rajasharan;
+package io.github.rajasharan.graph;
+
+import io.github.rajasharan.model.Edge;
+import io.github.rajasharan.model.Path;
 
 import java.util.*;
 
@@ -30,32 +33,31 @@ public class GraphBuilder {
     }
 
     private Path shortestPath(String end, Set<String> visitedNodes, TreeSet<Path> paths) {
-        if (paths.stream().anyMatch(path -> path.getDestination().equals(end))) {
-            return paths.stream().filter(path -> path.getDestination().equals(end)).findFirst().get();
+        Path path = paths.pollFirst();
+        while(path != null && visitedNodes.contains(path.getDestination())) {
+            path = paths.pollFirst();
         }
-        else {
-            Path path = paths.pollFirst();
-            while(path != null && visitedNodes.contains(path.getDestination())) {
-                path = paths.pollFirst();
-            }
 
-            if (path == null) {
-                return null;
-            }
-
-            visitedNodes.add(path.getDestination());
-            final int weight = path.getTotalDistance();
-            final Path pathVia = path;
-
-            List<Edge> newEdges = getGraph().get(path.getDestination());
-            newEdges.stream().forEach(e -> {
-                if (!visitedNodes.contains(e.getTo())) {
-                    paths.add(new Path(e.getTo(), weight + e.getWeight(), pathVia));
-                }
-            });
-
-            return shortestPath(end, visitedNodes, paths);
+        if (path == null) {
+            return null;
         }
+
+        if (path.getDestination().equals(end)) {
+            return path;
+        }
+
+        visitedNodes.add(path.getDestination());
+        final int weight = path.getTotalDistance();
+        final Path pathVia = path;
+
+        List<Edge> newEdges = getGraph().get(path.getDestination());
+        newEdges.stream().forEach(e -> {
+            if (!visitedNodes.contains(e.getTo())) {
+                paths.add(new Path(e.getTo(), weight + e.getWeight(), pathVia));
+            }
+        });
+
+        return shortestPath(end, visitedNodes, paths);
     }
 
     Map<String, List<Edge>> getGraph() {
